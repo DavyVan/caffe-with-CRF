@@ -12,6 +12,7 @@ namespace caffe
     template <typename Dtype>
     class MultiOutputLayer : public Layer<Dtype>
     {
+        // The following code is copied from InnerProductLayer
     public:
         explicit MultiOutputLayer(const LayerParameter& param)
             : Layer<Dtype>(param) {}
@@ -34,6 +35,9 @@ namespace caffe
         bool bias_term_;
         Blob<Dtype> bias_multiplier_;
         bool transpose_;  ///< if true, assume transposed weights
+
+        //The following is added by David FAN Quan 2016.8.6
+        int layer_no;   // but it seems like won't be used...except for LayerSetUp
     };
 }   // namespace caffe
 

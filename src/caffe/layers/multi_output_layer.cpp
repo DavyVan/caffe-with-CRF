@@ -1,4 +1,5 @@
 #include <vector>
+#include <fstream>
 
 #include "caffe/filler.hpp"
 #include "caffe/layers/multi_output_layer.hpp"
@@ -9,8 +10,25 @@ namespace caffe
     template <typename Dtype>
     void MultiOutputLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top)
     {
-        ////////////////TODO//////////////////////////
-        const int num_output = this->layer_param_.multi_output_param().num_output();
+        // automatically configured num_output
+        // Added by David FAN Quan 2016.8.6
+        //const int num_output = this->layer_param_.multi_output_param().num_output();
+        layer_no = this->layer_param_.multi_output_param().layer_no();
+        const string full_topo_file = this->layer_param_.multi_output_param().full_topo_file();
+        std::ifstream _file(full_topo_file.c_str());
+        int _t;
+        int num_output = 0;
+        for(int i = 0; i < 80; i++)     // fixed row number 80
+        {
+            for(int j = 0; j < 80; j++)     // fixed row number 80
+            {
+                _file >> _t;
+                if(_t == layer_no)
+                    num_output++;
+            }
+        }
+        _file.close();
+
         bias_term_ = this->layer_param_.multi_output_param().bias_term();
         transpose_ = this->layer_param_.multi_output_param().transpose();
         N_ = num_output;
@@ -78,7 +96,7 @@ namespace caffe
         }
     }
 
-    template <typename Dtye>
+    template <typename Dtype>
     void MultiOutputLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top)
     {
         const Dtype* bottom_data = bottom[0]->cpu_data();
