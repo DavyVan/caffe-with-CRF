@@ -72,4 +72,5 @@ namespace caffe
             }
         }
     }
+    INSTANTIATE_LAYER_GPU_FUNCS(MultiOutputLayer);
 }
