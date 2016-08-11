@@ -23,7 +23,7 @@ namespace caffe
             for(int j = 0; j < 80; j++)     // fixed row number 80
             {
                 _file >> _t;
-                if(_t == layer_no)
+                if(_t == layer_no && j > i)     //upper triangle
                     num_output++;
             }
         }
